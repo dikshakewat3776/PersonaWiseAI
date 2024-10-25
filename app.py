@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from db import store_conversation
+import random
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a random secret key
@@ -178,6 +179,19 @@ def conversation():
         response = {"next_prompt": prompts[conversation_state[user_id]['current_prompt']]}
     # print(response)
     return jsonify(response)
+
+@app.route('/score', methods=['GET'])
+def get_score():
+    # Generate a random score between 0 and 100
+    score = random.randint(0, 100)
+    return jsonify({'score': score})
+
+
+@app.route('/verify', methods=['GET'])
+def verify_user():
+    # Generate a random score between 0 and 100
+    score = random.randint(0, 100)
+    return jsonify({'score': score})
 
 if __name__ == '__main__':
     app.run(debug=True)
