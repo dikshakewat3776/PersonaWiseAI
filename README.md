@@ -6,6 +6,10 @@
 
 In India, traditional credit scoring methods often fail to account for many individuals’ financial realities, leading to exclusion from essential financial services. Additionally, the vast amount of financial advice available online can overwhelm users, making it challenging to find personalized guidance. PersonaWiseAI addresses these challenges by offering a tailored approach to credit assessment and investment recommendations.
 
+## Mind Map
+
+![image](https://github.com/user-attachments/assets/357020c1-8b90-470d-81c0-7fed0802d676)
+
 ## Features
 
 ### User Prompts for Data Collection
