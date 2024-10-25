@@ -10,6 +10,10 @@ In India, traditional credit scoring methods often fail to account for many indi
 
 ![image](https://github.com/user-attachments/assets/357020c1-8b90-470d-81c0-7fed0802d676)
 
+## Sequence Diagram
+
+![image](https://github.com/user-attachments/assets/d966014a-c363-4bdc-9c2d-291d309962ef)
+
 ## Features
 
 ### User Prompts for Data Collection
