@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from db import store_conversation
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a random secret key
@@ -166,13 +167,16 @@ def conversation():
     conversation_state[user_id]['responses'][prompts[current_prompt_index]] = user_input
     conversation_state[user_id]['current_prompt'] += 1
 
+    # print("here`````````")
+    store_conversation(user_id, prompts[current_prompt_index], conversation_state[user_id]['responses'])
+
     # Check if we reached the end of the prompts
     if conversation_state[user_id]['current_prompt'] >= len(prompts):
         response = {"message": "Thank you for providing your information!"}
         del conversation_state[user_id]  # Clear the state for this user
     else:
         response = {"next_prompt": prompts[conversation_state[user_id]['current_prompt']]}
-    print(response)
+    # print(response)
     return jsonify(response)
 
 if __name__ == '__main__':
