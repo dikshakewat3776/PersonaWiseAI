@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PersonaWiseAI - Data Collection</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Welcome to PersonaWiseAI</h1>
+    <form action="{{ url_for('submit') }}" method="POST">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select class="form-control" id="gender" name="gender" required>
+                <option value="">Select...</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="income">Monthly Income:</label>
+            <input type="number" class="form-control" id="income" name="income">
+        </div>
+        <div class="form-group">
+            <label for="expenses">Monthly Expenses:</label>
+            <input type="number" class="form-control" id="expenses" name="expenses">
+        </div>
+        <div class="form-group">
+            <label for="goals">Financial Goals:</label>
+            <textarea class="form-control" id="goals" name="goals"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+</body>
+</html>
