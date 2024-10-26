@@ -1,0 +1,57 @@
+{
+   "User Demographics":{
+      "Age":30,
+      "Housing Debt":1000000,
+      "Current Financial Situation":"Rental property generating income, but with some debt"
+   },
+   "Short-term Goals (0-3 years)":{
+      "1. Retirement Planning":[
+         {
+            "Strategy":"Public Provident Fund (PPF)",
+            "Description":"Consider contributing to a PPF for tax benefits and low-risk investment.",
+            "Source":"https://www.investopedia.com/articles/investment/INDP012034/the-basics-public-provident-fund"
+         }
+      ],
+      "2. Investment Strategies":[
+         {
+            "Strategy":"Diversified Equity Fund",
+            "Description":"Consider investing in a diversified equity fund for long-term growth and returns.",
+            "Source":"https://www.investopedia.com/articles/investment/INDP001345/the-basics-of-equity-funds"
+         }
+      ]
+   },
+   "Budgeting and Expense Management":{
+      "1. Budgeting Rules":[
+         {
+            "Strategy":"50/30/20 Rule",
+            "Description":"Allocate 50% of income towards necessities, 30% towards discretionary spending, and 20% towards savings and debt repayment.",
+            "Source":"https://www.nerdwallet.com/blog/budgeting/the-50-30-20-rule-is-it-right-for-you"
+         }
+      ],
+      "2. Expense Tracking":[
+         {
+            "Tool":"Mint",
+            "Description":"Utilize a budgeting app like Mint to track and categorize expenses effectively.",
+            "Source":"https://www.mint.com/"
+         }
+      ]
+   },
+   "Recommendations":{
+      "1. Review Recurring Deposits":[
+         {
+            "Action":"Adjust recurring deposits to free up cash flow",
+            "Description":"Review and adjust monthly recurring deposits to ensure they align with changing financial priorities.",
+            "Source":"https://www.investopedia.com/articles/personal-finance/031814/how-to-make-recurring-deposits-work-for-you.asp"
+         }
+      ]
+   },
+   "Potential Steps to Improve Financial Situation":{
+      "1. Debt Consolidation":[
+         {
+            "Benefits":"Reduced monthly payments, lower interest rates, and a single loan balance",
+            "Description":"Consider consolidating existing debt into a single loan with a lower interest rate.",
+            "Source":"https://www.investopedia.com/articles/best-practices-for-consolidating-debt-4586376"
+         }
+      ]
+   }
+}
