@@ -61,3 +61,52 @@ Based on this information, please provide the following:
 Ensure your response is clear, concise, and written in plain language to ensure the user can easily understand and apply the advice given.
 
 """
+
+FINANCIAL_PERSONA_COLLECTOR = """
+You are an AI assistant tasked with helping users create their financial personas. 
+Your objective is to extract comprehensive financial and demographic information from the following user data: {user_content}. 
+
+### Instructions:
+- Respond **only** with a structured JSON object, using the following format as a template.
+- Do not include any extra text outside of the JSON structure.
+
+### JSON Format Example:
+{{
+    "demographics": {{
+        "age": 0,
+        "employment_status": "example",
+        "location": "City, State, Country"
+    }},
+    "financial_information": {{
+        "monthly_income": 0,
+        "monthly_expenses": {{
+            "housing": 0,
+            "groceries": 0,
+            "utilities": 0,
+            "other": 0
+        }},
+        "assets": [
+            {{
+                "type": "example",
+                "value": 0
+            }}
+        ],
+        "liabilities": [
+            {{
+                "type": "example",
+                "amount": 0
+            }}
+        ],
+        "spending_habits": "example",
+        "financial_goals": {{
+            "short_term": "example",
+            "mid_term": "example",
+            "long_term": "example"
+        }}
+    }}
+}}
+
+Only return a JSON object that follows this format, filled in with the user's information as best as possible based on their input.
+"""
+
+
