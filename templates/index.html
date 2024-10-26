@@ -19,14 +19,15 @@
         }
         body {
             background-color: #f8f9fa;
+            padding-right: 200px;
         }
         #chatbox {
             border: 1px solid #ccc;
             height: 500px;
-            overflow-y: auto;
+            overflow-y: 100px;
             padding: 20px;
             background: white;
-            border-radius: 5px;
+            border-radius: 2px;
         }
         .message {
             margin: 10px 0;
@@ -42,6 +43,7 @@
         }
         #chat2 .form-control {
             border-color: transparent;
+            height: 50px;
         }
         #chat2 .form-control:focus {
             border-color: transparent;
@@ -69,13 +71,13 @@
 <nav class="navbar navbar-light bg-body-tertiary">
     <div class="container d-flex align-items-center">
         <a class="navbar-brand" href="#">
-            <img src="https://png.pngtree.com/png-vector/20240710/ourmid/pngtree-ai-chat-robot-with-money-or-bags-background-free-png-image_13038078.png"
+            <img src="https://png.pngtree.com/png-vector/20240710/ourmid/pngtree-ai-chat-robot-with-money-or-bags-transparent-free-download-png-image_13038080.png"
                  height="200"
                  width="200"
                  alt="personawise-logo"
                  loading="lazy" />
         </a>
-        <span class="navbar-text ms-3" style="font-size: 1.5rem; font-weight: bold; margin-right: 20px;">
+        <span class="navbar-text ms-3" style="font-size: 3.0rem; font-weight: bold; margin-right: 0.5px; ">
             PersonaWise AI
         </span>
     </div>
@@ -127,7 +129,7 @@
             </div>
 
             <!-- Section 2: Report Content -->
-            <div class="content">
+            <div class="content" style="height: 500px; width: 300px;">
                 <h5>Your Persona</h5>
 
                 <!-- Score Section -->
@@ -142,25 +144,32 @@
                 </div>
                 <div id="reportData"></div>
                 <button id="resetBtn" class="btn btn-danger mt-3">Reset</button>
-                <button id="verifyBtn" class="btn btn-success mt-3">Verify</button>
+                <button id="adviceBtn" class="btn btn-success mt-3">View Advice</button>
+                <button id="verifyBtn" class="btn btn-secondary mt-3">Verify</button>
             </div>
         </div>
+          <div id="advice-container" class="row row-cols-1 row-cols-md-3 g-4"></div>
+
     </div>
     </div>
+
   </div>
 </section>
+
 <script>
     const chatbox = document.getElementById('chatbox');
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
     const reportData = document.getElementById('reportData');
     const progressBar = document.getElementById('progressBar');
+    const gifContainer = document.getElementById('gifContainer');
+    const scoreValueElement = document.getElementById('scoreValue');
 
     let currentPrompt = 0;
     const userData = {};
     const userId = Date.now(); // Unique ID for the user session
     const MAX_QUESTIONS = 30; // Maximum number of questions
-    prompts = [
+    const prompts = [
         "Hello! I’m PersonaWiseAI, your personal financial assistant. To help you build a tailored financial profile, please share your financial and demographic information.",
         "What’s your monthly income?",
         "What are your monthly expenses?",
@@ -191,8 +200,8 @@
         "How do you feel about credit cards? Are they a helpful tool or a burden?",
         "What’s the largest purchase you’ve ever made?",
         "If you could change one thing about your financial situation, what would it be?",
-        "Is there any financial information you feel is missing or incomplete?",
-    ]
+        "Is there any financial information you feel is missing or incomplete?"
+    ];
 
     function appendMessage(sender, text) {
         const messageDiv = document.createElement('div');
@@ -205,12 +214,12 @@
     function updateReportCard() {
         reportData.innerHTML = '';
         for (const key in userData) {
-            if (key === prompts[0]) continue;
+            if (key === prompts[0]) continue; // Skip the welcome message
             const div = document.createElement('div');
             div.innerText = `${key}: ${userData[key]}`;
             reportData.appendChild(div);
         }
-        // Update progress bar, skipping the first prompt
+        // Update progress bar
         const answeredQuestions = Object.keys(userData).length - (userData[prompts[0]] ? 1 : 0);
         const progress = Math.min(100, Math.floor((answeredQuestions / (MAX_QUESTIONS - 1)) * 100));
         progressBar.style.width = progress + '%';
@@ -222,23 +231,18 @@
         if (input) {
             appendMessage('user', input);
             userData[prompts[currentPrompt]] = input; // Store the answer
-
             sendBtn.disabled = true; // Disable the button to prevent multiple clicks
 
             try {
-                // Send the input to the API
                 const response = await fetch('/conversation', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id: userId, message: input })
                 });
 
                 const data = await response.json();
                 userInput.value = ''; // Clear input
 
-                // Handle API response
                 if (data.error) {
                     appendMessage('bot', data.error);
                 } else if (currentPrompt < prompts.length - 1) {
@@ -260,10 +264,10 @@
     }
 
     // Start the conversation
-    appendMessage('bot', "Hello! I’m PersonaWiseAI, your personal financial assistant. To help you build a tailored financial profile, please share your financial and demographic information.");
+    appendMessage('bot', prompts[0]);
 
     sendBtn.addEventListener('click', processUserInput);
-    userInput.addEventListener('keypress', function (e) {
+    userInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             processUserInput();
         }
@@ -277,23 +281,18 @@
         progressBar.innerText = '0%';
         sendBtn.disabled = false;
         userInput.disabled = false;
-        appendMessage('bot', "Hello! I’m PersonaWiseAI, your personal financial assistant. To help you build a tailored financial profile, please share your financial and demographic information.");
+        appendMessage('bot', prompts[0]);
     });
 
-    document.getElementById('chatBtn').addEventListener('click', function() {
-        const gifContainer = document.getElementById('gifContainer');
+    document.getElementById('chatBtn').addEventListener('click', () => {
         gifContainer.style.display = 'block'; // Show the GIF
-
-        // Hide the GIF after 2 seconds
         setTimeout(() => {
-            gifContainer.style.display = 'none';
+            gifContainer.style.display = 'none'; // Hide the GIF after 2 seconds
         }, 2000);
     });
 
-    // Set initial score to 0
     let currentScore = 0;
 
-    // Function to fetch score from backend API
     async function fetchScore() {
         try {
             const response = await fetch('/score');
@@ -305,14 +304,11 @@
             updateScoreDisplay(currentScore);
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
-            // Optionally, keep the default score if there's an error
-            updateScoreDisplay(currentScore);
+            updateScoreDisplay(currentScore); // Keep the default score if there's an error
         }
     }
 
-    // Function to update score display and color
     function updateScoreDisplay(score) {
-        const scoreValueElement = document.getElementById('scoreValue');
         scoreValueElement.textContent = score;
 
         let color;
@@ -327,32 +323,25 @@
         }
 
         scoreValueElement.style.color = color;
-
-        // Update the progress bar based on the score
-        const progressBar = document.getElementById('progressBar');
         progressBar.style.width = `${score}%`;
         progressBar.setAttribute('aria-valuenow', score);
         progressBar.textContent = `${score}%`;
         progressBar.style.backgroundColor = color; // Match progress bar color to score
     }
 
-    // Initialize score display on page load
     window.onload = () => {
         updateScoreDisplay(currentScore);
         fetchScore(); // Fetch the score from the API
     };
 
-    // Function to call verify API
     async function verifyScore() {
+            alert('User verification coming soon with more exciting insights! ');
         try {
             const response = await fetch('/verify');
-
             if (!response.ok) {
                 throw new Error('Verification failed');
             }
-
             const data = await response.json();
-            // Handle verification response here
             alert('Verification successful: ' + data.score); // Adjust based on your API response
         } catch (error) {
             console.error('Verification error:', error);
@@ -360,7 +349,6 @@
         }
     }
 
-    // Add event listener to the Verify button
     document.getElementById('verifyBtn').addEventListener('click', verifyScore);
 </script>
 
