@@ -22,9 +22,9 @@
         }
         #chatbox {
             border: 1px solid #ccc;
-            height: 400px;
+            height: 500px;
             overflow-y: auto;
-            padding: 1px;
+            padding: 20px;
             background: white;
             border-radius: 5px;
         }
@@ -60,6 +60,7 @@
             padding: 20px;
             border-radius: 5px;
             height: 400px;
+            width: 700px;
             overflow-y: auto;
         }
     </style>
@@ -119,20 +120,32 @@
         </div>
       </div>
       <div class="col-md-6">
-        <div class="report-card">
-          <h5>Report Card</h5>
-          <div id="progressTracker" class="my-3">
-            <div class="progress">
-<!--              <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" >0%</div>-->
-                <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%; background-color: green;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-
+        <div class="report-card d-flex">
+            <!-- Section 1: User Image -->
+            <div class="user-image me-3">
+                <img src="https://i.pinimg.com/originals/13/cd/26/13cd26345c9b8f0572255571a2e4fd92.gif" alt="Avatar" class="rounded-circle img-fluid" style="max-width: 200px; height: 300px;">
             </div>
-          </div>
-          <div id="reportData"></div>
-          <button id="resetBtn" class="btn btn-danger mt-3">Reset</button>
-          <button id="downloadBtn" class="btn btn-success mt-3">Download Report</button>
+
+            <!-- Section 2: Report Content -->
+            <div class="content">
+                <h5>Your Persona</h5>
+
+                <!-- Score Section -->
+                <div id="scoreSection" class="my-3">
+                    <h6>Score: <span id="scoreValue" class="score-text">Loading...</span></h6>
+                </div>
+
+                <div id="progressTracker" class="my-3">
+                    <div class="progress">
+                        <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%; background-color: green;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                    </div>
+                </div>
+                <div id="reportData"></div>
+                <button id="resetBtn" class="btn btn-danger mt-3">Reset</button>
+                <button id="verifyBtn" class="btn btn-success mt-3">Verify</button>
+            </div>
         </div>
-      </div>
+    </div>
     </div>
   </div>
 </section>
@@ -148,38 +161,38 @@
     const userId = Date.now(); // Unique ID for the user session
     const MAX_QUESTIONS = 30; // Maximum number of questions
     prompts = [
-    "Hello! I’m PersonaWiseAI, your personal financial assistant. To help you build a tailored financial profile, please share your financial and demographic information.",
-    "What’s your monthly income?",
-    "What are your monthly expenses?",
-    "Do you have any assets? (e.g., property, savings)",
-    "What are your liabilities? (e.g., loans, debts)",
-    "How old are you?",
-    "What’s your employment status?",
-    "How many people are in your family?",
-    "What is your educational background?",
-    "What is your residential location?",
-    "How long have you lived at your current address?",
-    "Do you pay utility bills regularly?",
-    "What percentage of your income do you save each month?",
-    "What are your top three financial goals for the next year?",
-    "Are you currently investing? If so, what types of investments do you have?",
-    "How do you typically handle unexpected expenses?",
-    "On a scale of 1-10, how would you rate your financial literacy?",
-    "What is your preferred method of tracking expenses? (e.g., app, spreadsheet, mental)",
-    "Do you have any financial advisors or mentors?",
-    "What’s your biggest financial worry right now?",
-    "How often do you review your financial statements?",
-    "Do you have a budget? If yes, do you stick to it?",
-    "Have you ever had to take out a loan? If yes, what for?",
-    "What influences your spending habits the most?",
-    "Are you planning for retirement? If yes, what’s your strategy?",
-    "How do you feel about taking financial risks?",
-    "What types of financial products are you familiar with? (e.g., stocks, bonds, mutual funds)",
-    "How do you feel about credit cards? Are they a helpful tool or a burden?",
-    "What’s the largest purchase you’ve ever made?",
-    "If you could change one thing about your financial situation, what would it be?",
-    "Is there any financial information you feel is missing or incomplete?",
-]
+        "Hello! I’m PersonaWiseAI, your personal financial assistant. To help you build a tailored financial profile, please share your financial and demographic information.",
+        "What’s your monthly income?",
+        "What are your monthly expenses?",
+        "Do you have any assets? (e.g., property, savings)",
+        "What are your liabilities? (e.g., loans, debts)",
+        "How old are you?",
+        "What’s your employment status?",
+        "How many people are in your family?",
+        "What is your educational background?",
+        "What is your residential location?",
+        "How long have you lived at your current address?",
+        "Do you pay utility bills regularly?",
+        "What percentage of your income do you save each month?",
+        "What are your top three financial goals for the next year?",
+        "Are you currently investing? If so, what types of investments do you have?",
+        "How do you typically handle unexpected expenses?",
+        "On a scale of 1-10, how would you rate your financial literacy?",
+        "What is your preferred method of tracking expenses? (e.g., app, spreadsheet, mental)",
+        "Do you have any financial advisors or mentors?",
+        "What’s your biggest financial worry right now?",
+        "How often do you review your financial statements?",
+        "Do you have a budget? If yes, do you stick to it?",
+        "Have you ever had to take out a loan? If yes, what for?",
+        "What influences your spending habits the most?",
+        "Are you planning for retirement? If yes, what’s your strategy?",
+        "How do you feel about taking financial risks?",
+        "What types of financial products are you familiar with? (e.g., stocks, bonds, mutual funds)",
+        "How do you feel about credit cards? Are they a helpful tool or a burden?",
+        "What’s the largest purchase you’ve ever made?",
+        "If you could change one thing about your financial situation, what would it be?",
+        "Is there any financial information you feel is missing or incomplete?",
+    ]
 
     function appendMessage(sender, text) {
         const messageDiv = document.createElement('div');
@@ -267,11 +280,6 @@
         appendMessage('bot', "Hello! I’m PersonaWiseAI, your personal financial assistant. To help you build a tailored financial profile, please share your financial and demographic information.");
     });
 
-    document.getElementById('downloadBtn').addEventListener('click', () => {
-        // Functionality for downloading the report can be added here
-        alert("Download functionality not implemented yet.");
-    });
-
     document.getElementById('chatBtn').addEventListener('click', function() {
         const gifContainer = document.getElementById('gifContainer');
         gifContainer.style.display = 'block'; // Show the GIF
@@ -281,6 +289,79 @@
             gifContainer.style.display = 'none';
         }, 2000);
     });
+
+    // Set initial score to 0
+    let currentScore = 0;
+
+    // Function to fetch score from backend API
+    async function fetchScore() {
+        try {
+            const response = await fetch('/score');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            currentScore = data.score; // Assuming the API returns an object with a 'score' property
+            updateScoreDisplay(currentScore);
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+            // Optionally, keep the default score if there's an error
+            updateScoreDisplay(currentScore);
+        }
+    }
+
+    // Function to update score display and color
+    function updateScoreDisplay(score) {
+        const scoreValueElement = document.getElementById('scoreValue');
+        scoreValueElement.textContent = score;
+
+        let color;
+        if (score >= 0 && score < 30) {
+            color = 'red'; // Red for scores 0-29
+        } else if (score >= 30 && score < 60) {
+            color = 'orange'; // Amber for scores 30-59
+        } else if (score >= 60 && score <= 100) {
+            color = 'green'; // Green for scores 60-100
+        } else {
+            color = 'gray'; // For out-of-range values
+        }
+
+        scoreValueElement.style.color = color;
+
+        // Update the progress bar based on the score
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.width = `${score}%`;
+        progressBar.setAttribute('aria-valuenow', score);
+        progressBar.textContent = `${score}%`;
+        progressBar.style.backgroundColor = color; // Match progress bar color to score
+    }
+
+    // Initialize score display on page load
+    window.onload = () => {
+        updateScoreDisplay(currentScore);
+        fetchScore(); // Fetch the score from the API
+    };
+
+    // Function to call verify API
+    async function verifyScore() {
+        try {
+            const response = await fetch('/verify');
+
+            if (!response.ok) {
+                throw new Error('Verification failed');
+            }
+
+            const data = await response.json();
+            // Handle verification response here
+            alert('Verification successful: ' + data.score); // Adjust based on your API response
+        } catch (error) {
+            console.error('Verification error:', error);
+            alert('Verification failed: ' + error.message);
+        }
+    }
+
+    // Add event listener to the Verify button
+    document.getElementById('verifyBtn').addEventListener('click', verifyScore);
 </script>
 
 </body>
