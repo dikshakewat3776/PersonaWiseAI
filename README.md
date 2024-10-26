@@ -20,27 +20,48 @@ In India, traditional credit scoring methods often fail to account for many indi
 - Gather essential financial data (income, expenses, assets, liabilities) and demographic information (age, employment status).
 - Collect insights on financial habits, goals, and risk tolerance to enrich user profiles.
 
+  ![image](https://github.com/user-attachments/assets/c89f13e6-1d1b-496d-9dea-2c4d14ae7868)
+
 ### Real-time Financial Persona Building
 - Dynamic dashboard displaying a user’s financial persona, including creditworthiness estimates and spending patterns.
 - Progress tracker encouraging users to complete their profiles for better assessments.
+
+  ![image](https://github.com/user-attachments/assets/fe97e7fe-9d70-46df-894b-c4160427731d)
 
 ### Data Extraction and Processing with LLaMA
 - Use LLaMA to parse user responses into structured data for real-time updates.
 - Natural language understanding allows intuitive input for users.
 
+![image](https://github.com/user-attachments/assets/3aac2e22-f675-49f1-bd5a-621ce5b61bf2)
+
 ### Alternative Creditworthiness Scoring
 - Proprietary score based on alternative data inputs, focusing on spending stability, lifestyle, and repayment history.
 - Integration of open financial models to enhance scoring accuracy.
+
+![image](https://github.com/user-attachments/assets/8aecc9f9-d340-48cf-8eef-3dfcd5a44db0)
 
 ### Personalized Financial Advice and Investment Strategy
 - Generate tailored financial advice on budgeting and debt management based on user profiles.
 - Recommend investment options (fixed deposits, bonds, mutual funds) aligned with user goals and risk tolerance.
 
+![image](https://github.com/user-attachments/assets/2f4c1283-3c94-414c-bcfe-c6928c9e34e9)
+
 ### User-Friendly UI/UX
-- Visually appealing dashboard with infographics and progress indicators.
+- Visually appealing data with infographics and progress indicators.
 - Gradual, interactive prompts to avoid overwhelming users, with the option to save and return.
+
+![image](https://github.com/user-attachments/assets/e60d924d-fc06-43be-b688-1fee45b7c2ab)
 
 ### Testing and Iteration
 - Early user testing to validate prompts and assessment generation processes.
 - Iterative model refinement based on user feedback and data.
+- Sample tailored responses by our AI categorising advices tailored for user.
+
+![image](https://github.com/user-attachments/assets/51e7c7eb-c8df-4d28-b514-c89c380d6586)
+
+## Introducting PersonaWise AI !!!
+
+https://github.com/user-attachments/assets/d08986d8-6635-4891-802c-d56f02af517c
+
+
 
