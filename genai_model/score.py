@@ -1,3 +1,35 @@
+def compute_score_data(bot_response):
+    # Extract values
+    responses = bot_response["bot_response"]
+    income = float(responses.get("What’s your monthly income?", 0))
+    expenses = float(responses.get("What are your monthly expenses?", 0))
+    assets = responses.get("Do you have any assets? (e.g., property, savings)", "").count("property")
+    liabilities = responses.get("What are your liabilities? (e.g., loans, debts)", "").count("loans")
+
+    # Calculate scores
+    max_income = 100000
+    income_score = min((income / max_income) * 100, 100)
+
+    max_expense_ratio = 0.30
+    if income > 0:
+        expense_ratio = expenses / income
+        expenses_score = max(0, (1 - expense_ratio / max_expense_ratio) * 100)
+    else:
+        expenses_score = 0
+
+    savings_score = min(assets * 20, 100)
+
+    max_debt_score = 100
+    debt_score = max(0, max_debt_score - (liabilities * 20))
+
+    return {
+        "Income Score": round(income_score, 2),
+        "Expenses Score": round(expenses_score, 2),
+        "Savings Score": round(savings_score, 2),
+        "Debt Score": round(debt_score, 2),
+    }
+
+
 def calculate_financial_score(financial_data):
     # Input validation
     if financial_data.get("income", 0) < 0:
@@ -21,6 +53,7 @@ def calculate_financial_score(financial_data):
     debt_to_income_ratio = (debt / income * 100) if income > 0 else 0
 
     financial_score = (0.4 * net_income) + (0.3 * savings_rate) - (0.3 * debt_to_income_ratio)
+    financial_score = max(0, min(financial_score, 100))  # Limit score to 0-100
 
     # Health status classification
     if financial_score > 75:
@@ -34,7 +67,7 @@ def calculate_financial_score(financial_data):
         "Net Income": net_income,
         "Savings Rate (%)": savings_rate,
         "Debt-to-Income Ratio (%)": debt_to_income_ratio,
-        "Financial Score": financial_score,
+        "Score": round(financial_score, 2),
         "Health Status": health_status
     }
 
