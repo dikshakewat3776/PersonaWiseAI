@@ -57,7 +57,7 @@ Based on this information, please provide the following:
 ### Sources:
 - For each recommendation, include credible sources that explain the rationale and provide further reading links.
 
-Ensure your response is clear, concise, and written in JSON format to ensure the user can easily understand and apply the advice given. Where the key as 1-6 where 
+Ensure your response is clear, concise, and written in JSON format to ensure the it can be sent to the API and apply the advice given. Where the key is 1 to 6 where 
 1 indicates Short-term Goals (0-3 years)
 2 indicates Mid-term Goals (3-5 years)
 3 indicates Long-term Goals (5+ years)
@@ -65,5 +65,7 @@ Ensure your response is clear, concise, and written in JSON format to ensure the
 5 indicates Recommendations
 6 indicates Potential Steps to Improve Financial Situation
 7 indicates Sources
+
+And each point must have only 2 points 
 
 """

@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
-from db import store_conversation
+from db import store_conversation, get_conversations
 import random
+from genai_model.genai_model import FinancialAdvisor
+import json
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a random secret key
@@ -192,6 +194,25 @@ def verify_user():
     # Generate a random score between 0 and 100
     score = random.randint(0, 100)
     return jsonify({'score': score})
+
+@app.route('/advice', methods=['POST'])
+def advice_user():
+    user_id = request.json.get('user_id')
+    print('Generating advice for User Id: ' + str(user_id))
+    user_conversation = get_conversations(user_id=user_id)
+    if not user_conversation:
+        return jsonify({"error": "Could not generate advice. Please try again."})
+    if not user_conversation[0].get('bot_response'):
+        return jsonify({"error": "Could not generate advice. Please try again."})
+    bot_data = user_conversation[0].get('bot_response')
+    if bot_data:
+        first_key = list(bot_data.keys())[0]
+        del bot_data[first_key]  # Delete the first key-value pair
+    print('Generating advice with bot data: ' + str(bot_data))
+    data = FinancialAdvisor().parse_with_llama(content=bot_data)
+    print('Generated advice data type: ' + str(type(data)))
+    print('Generated advice data: ' + str(data))
+    return json.loads(data)
 
 if __name__ == '__main__':
     app.run(debug=True)

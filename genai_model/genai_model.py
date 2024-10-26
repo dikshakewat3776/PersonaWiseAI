@@ -6,7 +6,7 @@ from genai_model.prompt_templates import FINANCIAL_ADVISOR_PROMPT
 class FinancialAdvisor:
     def __init__(self, prompt_template=FINANCIAL_ADVISOR_PROMPT):
         # Initialize the LLaMA3.2 model (Ensure that the server is running on localhost and port is correct)
-        self.llm_model = OllamaLLM(model="llama3.2:1b", host="localhost", port=11434)
+        self.llm_model = OllamaLLM(model="llama3.2", host="localhost", port=11434)
         self.prompt_template = prompt_template
 
     def parse_with_llama(self, content):
