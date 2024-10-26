@@ -1,15 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from db import store_conversation, get_conversations
 import random
-from genai_model.genai_model import FinancialAdvisor
+from genai_model.genai_model import FinancialAdvisor, FinancialPersonaCollector
 import json
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a random secret key
 
+
 @app.route('/test')
 def test():
     return "Flask is working!"
+
 
 @app.route('/')
 def index():
@@ -151,7 +153,6 @@ def validate_input(prompt_index, user_input):
     return True  # Default case
 
 
-
 @app.route('/conversation', methods=['POST'])
 def conversation():
     user_id = request.json.get('user_id')
@@ -182,6 +183,35 @@ def conversation():
     # print(response)
     return jsonify(response)
 
+
+@app.route('/genai-conversation', methods=['POST'])
+def conversation():
+    user_id = request.json.get('user_id')
+    user_input = request.json.get('message')
+    collecting_data = True
+
+    if user_id not in conversation_state:
+        # Prompt user for input
+        conversation_state[user_id] = {'current_prompt': 0, 'responses': {}}
+        current_prompt_index = conversation_state[user_id]['current_prompt']
+        response = {"message": prompts[current_prompt_index]}
+        return jsonify(response)
+
+    while collecting_data:
+        # Parse the user input with LLaMA
+        financial_persona_collect = FinancialPersonaCollector()
+        parsed_data = financial_persona_collect.parse_with_llama(user_input)
+        # Update user data with parsed information
+        financial_persona_collect.update_user_data(parsed_data)
+        store_conversation(user_id, user_input, parsed_data)
+        if len(financial_persona_collect.user_data) > 5:
+            response = {"message": "Thank you for providing your information!"}
+            del conversation_state[user_id]  # Clear the state for this user
+        else:
+            response = {"message": parsed_data}
+        return jsonify(response)
+
+
 @app.route('/score', methods=['GET'])
 def get_score():
     # Generate a random score between 0 and 100
@@ -194,6 +224,7 @@ def verify_user():
     # Generate a random score between 0 and 100
     score = random.randint(0, 100)
     return jsonify({'score': score})
+
 
 @app.route('/advice', methods=['POST'])
 def advice_user():
@@ -213,6 +244,7 @@ def advice_user():
     print('Generated advice data type: ' + str(type(data)))
     print('Generated advice data: ' + str(data))
     return json.loads(data)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
