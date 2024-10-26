@@ -3,6 +3,7 @@ from db import store_conversation, get_conversations
 import random
 from genai_model.genai_model import FinancialAdvisor, FinancialPersonaCollector
 import json
+from genai_model.score import compute_score_data, calculate_financial_score
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a random secret key
@@ -47,34 +48,16 @@ prompts = [
     "What are your monthly expenses?",
     "Do you have any assets? (e.g., property, savings)",
     "What are your liabilities? (e.g., loans, debts)",
-    "How old are you?",
     "What’s your employment status?",
     "How many people are in your family?",
     "What is your educational background?",
-    "What is your residential location?",
-    "How long have you lived at your current address?",
     "Do you pay utility bills regularly?",
-    "What percentage of your income do you save each month?",
-    "What are your top three financial goals for the next year?",
     "Are you currently investing? If so, what types of investments do you have?",
-    "How do you typically handle unexpected expenses?",
-    "On a scale of 1-10, how would you rate your financial literacy?",
     "What is your preferred method of tracking expenses? (e.g., app, spreadsheet, mental)",
-    "Do you have any financial advisors or mentors?",
-    "What’s your biggest financial worry right now?",
-    "How often do you review your financial statements?",
-    "Do you have a budget? If yes, do you stick to it?",
-    "Have you ever had to take out a loan? If yes, what for?",
-    "What influences your spending habits the most?",
-    "How do you prioritize your financial goals?",
-    "What financial milestones have you achieved so far?",
-    "Are you planning for retirement? If yes, what’s your strategy?",
-    "How do you feel about taking financial risks?",
     "What types of financial products are you familiar with? (e.g., stocks, bonds, mutual funds)",
     "Have you ever declared bankruptcy? If yes, what led to that decision?",
     "How do you feel about credit cards? Are they a helpful tool or a burden?",
     "What’s the largest purchase you’ve ever made?",
-    "If you could change one thing about your financial situation, what would it be?",
     "Is there any financial information you feel is missing or incomplete?"
 ]
 
@@ -83,73 +66,8 @@ conversation_state = {}
 
 
 def validate_input(prompt_index, user_input):
-    if prompt_index == 1:  # Monthly income
-        return user_input.isdigit() and int(user_input) >= 0
-    elif prompt_index == 2:  # Monthly expenses
-        return user_input.isdigit() and int(user_input) >= 0
-    elif prompt_index == 3:  # Assets
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 4:  # Liabilities
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 5:  # Age
-        return user_input.isdigit() and 0 < int(user_input) < 65  # Valid age
-    elif prompt_index == 6:  # Employment status
-        return len(user_input) > 0  # Must not be empty
-    elif prompt_index == 7:  # Family size
-        return user_input.isdigit() and int(user_input) > 0  # Must be a positive number
-    elif prompt_index == 8:  # Educational background
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 9:  # Residential location
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 10:  # Duration at current address
-        return user_input.isdigit() and int(user_input) >= 0  # Must be a non-negative number
-    elif prompt_index == 11:  # Utility bills
-        return user_input.lower() in ['yes', 'no']  # Expecting yes or no
-    elif prompt_index == 12:  # Savings percentage
-        return user_input.isdigit() and 0 <= int(user_input) <= 100  # 0-100 percent
-    elif prompt_index == 13:  # Financial goals
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 14:  # Investments
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 15:  # Handling unexpected expenses
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 16:  # Financial literacy rating
-        return user_input.isdigit() and 1 <= int(user_input) <= 10  # Scale of 1-10
-    elif prompt_index == 17:  # Tracking expenses method
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 18:  # Financial advisors
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 19:  # Biggest financial worry
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 20:  # Review frequency
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 21:  # Budget
-        return user_input.lower() in ['yes', 'no']  # Expecting yes or no
-    elif prompt_index == 22:  # Loan history
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 23:  # Spending habits influences
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 24:  # Financial goals prioritization
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 25:  # Financial milestones
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 26:  # Retirement planning
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 27:  # Financial risks attitude
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 28:  # Financial products familiarity
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 29:  # Bankruptcy
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 30:  # Credit cards opinion
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 31:  # Largest purchase
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 32:  # Change in financial situation
-        return len(user_input) > 0  # Ensure user provides some response
-    elif prompt_index == 33:  # Missing financial information
-        return len(user_input) > 0  # Ensure user provides some response
-
+    if prompt_index:
+        return len(user_input) > 0
     return True  # Default case
 
 
@@ -184,32 +102,34 @@ def conversation():
     return jsonify(response)
 
 
-@app.route('/genai-conversation', methods=['POST'])
-def conversation():
-    user_id = request.json.get('user_id')
-    user_input = request.json.get('message')
-    collecting_data = True
-
-    if user_id not in conversation_state:
-        # Prompt user for input
-        conversation_state[user_id] = {'current_prompt': 0, 'responses': {}}
-        current_prompt_index = conversation_state[user_id]['current_prompt']
-        response = {"message": prompts[current_prompt_index]}
-        return jsonify(response)
-
-    while collecting_data:
-        # Parse the user input with LLaMA
-        financial_persona_collect = FinancialPersonaCollector()
-        parsed_data = financial_persona_collect.parse_with_llama(user_input)
-        # Update user data with parsed information
-        financial_persona_collect.update_user_data(parsed_data)
-        store_conversation(user_id, user_input, parsed_data)
-        if len(financial_persona_collect.user_data) > 5:
-            response = {"message": "Thank you for providing your information!"}
-            del conversation_state[user_id]  # Clear the state for this user
-        else:
-            response = {"message": parsed_data}
-        return jsonify(response)
+# @app.route('/conversation', methods=['POST'])
+# def conversation():
+#     user_id = request.json.get('user_id')
+#     user_input = request.json.get('message')
+#     collecting_data = True
+#
+#     if user_id not in conversation_state:
+#         # Prompt user for input
+#         conversation_state[user_id] = {'current_prompt': 0, 'responses': {}}
+#         current_prompt_index = conversation_state[user_id]['current_prompt']
+#         response = {"message": prompts[current_prompt_index]}
+#         return jsonify(response)
+#
+#     while collecting_data:
+#         print("here1------------" + str(user_input))
+#         # Parse the user input with LLaMA
+#         financial_persona_collect = FinancialPersonaCollector()
+#         parsed_data = financial_persona_collect.parse_with_llama(user_input)
+#         print("here2------------" + str(parsed_data))
+#         # Update user data with parsed information
+#         financial_persona_collect.update_user_data(parsed_data)
+#         store_conversation(user_id, user_input, parsed_data)
+#         if len(financial_persona_collect.user_data) > 5:
+#             response = {"message": "Thank you for providing your information!"}
+#             del conversation_state[user_id]  # Clear the state for this user
+#         else:
+#             response = {"message": parsed_data}
+#         return jsonify(response)
 
 
 @app.route('/score', methods=['GET'])
@@ -217,6 +137,29 @@ def get_score():
     # Generate a random score between 0 and 100
     score = random.randint(0, 100)
     return jsonify({'score': score})
+
+#
+# @app.route('/score', methods=['POST'])
+# def get_score():
+#     # # Generate a random score between 0 and 100
+#     # score = random.randint(0, 100)
+#     user_id = request.json.get('user_id')
+#     print('Generating score for User Id: ' + str(user_id))
+#     user_conversation = get_conversations(user_id=user_id)
+#     if not user_conversation:
+#         return jsonify({'score': 0})
+#     if not user_conversation[0].get('bot_response'):
+#         return jsonify({'score': 0})
+#     bot_data = user_conversation[0].get('bot_response')
+#     if bot_data:
+#         first_key = list(bot_data.keys())[0]
+#         del bot_data[first_key]  # Delete the first key-value pair
+#     print('Generating score with bot data: ' + str(bot_data))
+#     score_data = compute_score_data(bot_data)
+#     score_response = calculate_financial_score(score_data)
+#     print('Generated score data: ' + str(score_response))
+#     store_conversation(user_id, '', score_data)
+#     return jsonify({'score': score_response.get('Score')})
 
 
 @app.route('/verify', methods=['GET'])
