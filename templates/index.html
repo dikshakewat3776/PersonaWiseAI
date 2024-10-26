@@ -87,10 +87,6 @@
     <div class="row">
       <div class="col-md-6">
         <div class="card" id="chat2">
-<!--          <div class="card-header d-flex justify-content-between align-items-center p-3">-->
-<!--            <h5 class="mb-0">PersonaWise AI</h5>-->
-<!--            <button type="button" class="btn btn-primary btn-sm">Chat with me!</button>-->
-<!--          </div>-->
             <div class="card-header d-flex justify-content-between align-items-center p-3">
                 <h5 class="mb-0">PersonaWise AI</h5>
 <!--                <button type="button" class="btn btn-primary btn-sm" id="chatBtn">Chat with me!</button>-->
@@ -99,13 +95,7 @@
             </div>
 
             <!-- GIF Container -->
-            <div id="gifContainer" style="display: none;
-                             text-align: center;
-                             margin-top: 5px;
-                             width: 1000px;
-                             height: 100px;
-                             max-width: 10%;
-                             max-height: 10%;">
+            <div id="gifContainer" style="display: none; text-align: center; margin-top: 5px; width: 1000px; height: 100px; max-width: 10%; max-height: 10%;">
                 <img src="https://media.tenor.com/PI_PlTRIHbIAAAAi/money-rain.gif" alt="Loading..." width="500" />
             </div>
 
@@ -133,9 +123,9 @@
                 <h5>Your Persona is here!</h5>
 
                 <!-- Score Section -->
-                <div id="scoreSection" class="my-3">
-                    <h6>Score: <span id="scoreValue" class="score-text">Loading...</span></h6>
-                </div>
+<!--                <div id="scoreSection" class="my-3">-->
+<!--                    <h6>Score: <span id="scoreValue" class="score-text">Loading...</span></h6>-->
+<!--                </div>-->
 
                 <div id="progressTracker" class="my-3">
                     <div class="progress">
@@ -165,7 +155,7 @@
     const reportData = document.getElementById('reportData');
     const progressBar = document.getElementById('progressBar');
     const gifContainer = document.getElementById('gifContainer');
-    const scoreValueElement = document.getElementById('scoreValue');
+<!--    const scoreValueElement = document.getElementById('scoreValue');-->
 
     let currentPrompt = 0;
     const userData = {};
@@ -299,49 +289,49 @@
         "user_id" : userId
     };
 
-    async function fetchScore() {
-        try {
-                const response = await fetch('/score');
+<!--    async function fetchScore() {-->
+<!--        try {-->
+<!--                const response = await fetch('/score');-->
 <!--            const response = await fetch('/score', {-->
 <!--                method: 'POST',-->
 <!--                headers: { 'Content-Type': 'application/json' },-->
 <!--                body: JSON.stringify(userInfo),-->
 <!--            });-->
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            currentScore = data.score; // Assuming the API returns an object with a 'score' property
-            updateScoreDisplay(currentScore);
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
-            updateScoreDisplay(currentScore); // Keep the default score if there's an error
-        }
-    }
+<!--            if (!response.ok) {-->
+<!--                throw new Error('Network response was not ok');-->
+<!--            }-->
+<!--            const data = await response.json();-->
+<!--            currentScore = data.score; // Assuming the API returns an object with a 'score' property-->
+<!--            updateScoreDisplay(currentScore);-->
+<!--        } catch (error) {-->
+<!--            console.error('There was a problem with the fetch operation:', error);-->
+<!--            updateScoreDisplay(currentScore); // Keep the default score if there's an error-->
+<!--        }-->
+<!--    }-->
 
-    function updateScoreDisplay(score) {
-        scoreValueElement.textContent = score;
+<!--    function updateScoreDisplay(score) {-->
+<!--        scoreValueElement.textContent = score;-->
 
-        let color;
-        if (score >= 0 && score < 25) {
-            color = 'red'; // Red for scores 0-29
-        } else if (score >= 25 && score < 50) {
-            color = 'orange'; // Amber for scores 30-59
-        } else if (score >= 60 && score <= 100) {
-            color = 'green'; // Green for scores 60-100
-        } else {
-            color = 'gray'; // For out-of-range values
-        }
+<!--        let color;-->
+<!--        if (score >= 0 && score < 25) {-->
+<!--            color = 'red'; // Red for scores 0-29-->
+<!--        } else if (score >= 25 && score < 50) {-->
+<!--            color = 'orange'; // Amber for scores 30-59-->
+<!--        } else if (score >= 60 && score <= 100) {-->
+<!--            color = 'green'; // Green for scores 60-100-->
+<!--        } else {-->
+<!--            color = 'gray'; // For out-of-range values-->
+<!--        }-->
 
-        scoreValueElement.style.color = color;
-        progressBar.style.width = `${score}%`;
-        progressBar.setAttribute('aria-valuenow', score);
-        progressBar.textContent = `${score}%`;
-        progressBar.style.backgroundColor = color; // Match progress bar color to score
-    }
+<!--        scoreValueElement.style.color = color;-->
+<!--        progressBar.style.width = `${score}%`;-->
+<!--        progressBar.setAttribute('aria-valuenow', score);-->
+<!--        progressBar.textContent = `${score}%`;-->
+<!--        progressBar.style.backgroundColor = color; // Match progress bar color to score-->
+<!--    }-->
 
     window.onload = () => {
-        updateScoreDisplay(currentScore);
+<!--        updateScoreDisplay(currentScore);-->
         fetchScore(); // Fetch the score from the API
     };
 
@@ -362,8 +352,6 @@
 
     document.getElementById('verifyBtn').addEventListener('click', verifyScore);
 
-
-
     // Function to call advice API
     async function getAdvice() {
         // Create a loading element
@@ -379,11 +367,6 @@
                 body: JSON.stringify(userInfo),
             });
 
-            alert('User verification coming soon with more exciting insights! ');
-            alert('User verification coming soon with more exciting insights! ');
-            alert('User verification coming soon with more exciting insights! ');
-            alert('User verification coming soon with more exciting insights! ');
-            alert('User verification coming soon with more exciting insights! ');
 
             if (!response.ok) {
                 throw new Error('Failed to fetch advice. Please try again later.');

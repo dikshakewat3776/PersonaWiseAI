@@ -179,9 +179,9 @@ def advice_user():
     if not user_conversation[0].get('bot_response'):
         return jsonify({"error": "Could not generate advice. Please try again."})
     bot_data = user_conversation[0].get('bot_response')
-    if bot_data:
-        first_key = list(bot_data.keys())[0]
-        del bot_data[first_key]  # Delete the first key-value pair
+    # if bot_data:
+    #     first_key = list(bot_data.keys())[0]
+    #     del bot_data[first_key]  # Delete the first key-value pair
     print('Generating advice with bot data: ' + str(bot_data))
     data = FinancialAdvisor().parse_with_llama(content=bot_data)
     store_conversation(user_id, '', data)

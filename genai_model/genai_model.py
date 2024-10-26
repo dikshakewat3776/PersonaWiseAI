@@ -1,3 +1,5 @@
+from json import JSONDecodeError
+
 from langchain_ollama import OllamaLLM  # Importing the LLM interface
 from langchain_core.prompts import ChatPromptTemplate  # For templating the prompts
 from genai_model.prompt_templates import FINANCIAL_ADVISOR_PROMPT, FINANCIAL_PERSONA_COLLECTOR
@@ -92,17 +94,31 @@ class FinancialAdvisor:
         # Attempt to parse the response
         try:
             parsed_data = ast.literal_eval(response)  # Convert response to dictionary
-        except (ValueError, SyntaxError) as e:
+            return parsed_data
+        except (ValueError, SyntaxError, JSONDecodeError) as e:
             print("Failed to decode JSON response. Response received:")
             print(response)
-            parsed_data = {}  # Return an empty dictionary if parsing fails
 
-        return parsed_data  # Return parsed data
+            # Check if '```json' exists in the response
+            if '```json' in response:
+                response = response.replace('```json', '')  # Remove the '```json' part
+                try:
+                    return json.loads(response)  # Attempt to parse the modified response as JSON
+                except json.JSONDecodeError:
+                    print("Failed to decode the modified JSON response.")
+                    return {}  # Return an empty dictionary if parsing fails
+            elif isinstance(response, str) :
+                try:
+                    return json.loads(response)  # Attempt to parse the modified response as JSON
+                except json.JSONDecodeError:
+                    print("Failed to decode the modified JSON response.")
+                    return {}  # Return an empty dictionary if parsing fails
+            else:
+                return
 
 
 if __name__ == "__main__":
-    content = "I'm 27 years old female . with housing debt of 59 lakhs . 60 % of income goes into EMI , I have 28275 " \
-              "goes into RD . Now My salary raised from 18.8 to 22 please help my finances."
+    content = "I'm 27 years old female . with housing debt of 59 lakhs . 60 % of income goes into EMI , I have 28275 goes into RD . Now My salary raised from 18.8 to 22 please help my finances."
     # print(FinancialAdvisor().parse_with_llama(content=content))
     financial_persona_json = FinancialPersonaCollector().collect_user_data()
     print("Final Financial Persona:\n", financial_persona_json)
