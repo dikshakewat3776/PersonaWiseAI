@@ -148,14 +148,16 @@
                 <button id="verifyBtn" class="btn btn-secondary mt-3">Verify</button>
             </div>
         </div>
-          <div id="advice-container" class="row row-cols-1 row-cols-md-3 g-4"></div>
-
     </div>
     </div>
 
   </div>
 </section>
-
+<title>Financial Advice with PersonaWiseAI!</title>
+<div id="advice-container"
+     class="row row-cols-1 row-cols-md-3 g-5"
+     style="margin: 0 auto; padding: 0 100px; max-width: 1500px; width: 200% border: 10px solid transparent;">
+</div>
 <script>
     const chatbox = document.getElementById('chatbox');
     const userInput = document.getElementById('userInput');
@@ -292,10 +294,19 @@
     });
 
     let currentScore = 0;
+    // User id
+    const userInfo = {
+        "user_id" : userId
+    };
 
     async function fetchScore() {
         try {
-            const response = await fetch('/score');
+                const response = await fetch('/score');
+<!--            const response = await fetch('/score', {-->
+<!--                method: 'POST',-->
+<!--                headers: { 'Content-Type': 'application/json' },-->
+<!--                body: JSON.stringify(userInfo),-->
+<!--            });-->
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -312,9 +323,9 @@
         scoreValueElement.textContent = score;
 
         let color;
-        if (score >= 0 && score < 30) {
+        if (score >= 0 && score < 25) {
             color = 'red'; // Red for scores 0-29
-        } else if (score >= 30 && score < 60) {
+        } else if (score >= 25 && score < 50) {
             color = 'orange'; // Amber for scores 30-59
         } else if (score >= 60 && score <= 100) {
             color = 'green'; // Green for scores 60-100
@@ -342,7 +353,7 @@
                 throw new Error('Verification failed');
             }
             const data = await response.json();
-            alert('Verification successful: ' + data.score); // Adjust based on your API response
+            alert('Verification successful with the confidence score: ' + data.score);
         } catch (error) {
             console.error('Verification error:', error);
             alert('Verification failed: ' + error.message);
@@ -350,6 +361,135 @@
     }
 
     document.getElementById('verifyBtn').addEventListener('click', verifyScore);
+
+
+
+    // Function to call advice API
+    async function getAdvice() {
+        // Create a loading element
+        const loadingMessage = document.createElement('div');
+        loadingMessage.textContent = 'Loading... Please wait.';
+        loadingMessage.className = 'loading-indicator'; // You can add a class for styling
+        document.body.appendChild(loadingMessage); // Append it to the body or any specific container
+
+        try {
+            const response = await fetch('/advice', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userInfo),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch advice. Please try again later.');
+            }
+
+            const adviceData = await response.json();
+<!--            const adviceData = {'User Demographics': {'Age': 30, 'Housing Debt': 1000000, 'Current Financial Situation': 'Rental property generating income, but with some debt'}, 'Short-term Goals (0-3 years)': {'1. Retirement Planning': [{'Strategy': 'Public Provident Fund (PPF)', 'Description': 'Consider contributing to a PPF for tax benefits and low-risk investment.', 'Source': 'https://www.investopedia.com/articles/investment/INDP012034/the-basics-public-provident-fund'}], '2. Investment Strategies': [{'Strategy': 'Diversified Equity Fund', 'Description': 'Consider investing in a diversified equity fund for long-term growth and returns.', 'Source': 'https://www.investopedia.com/articles/investment/INDP001345/the-basics-of-equity-funds'}]}, 'Budgeting and Expense Management': {'1. Budgeting Rules': [{'Strategy': '50/30/20 Rule', 'Description': 'Allocate 50% of income towards necessities, 30% towards discretionary spending, and 20% towards savings and debt repayment.', 'Source': 'https://www.nerdwallet.com/blog/budgeting/the-50-30-20-rule-is-it-right-for-you'}], '2. Expense Tracking': [{'Tool': 'Mint', 'Description': 'Utilize a budgeting app like Mint to track and categorize expenses effectively.', 'Source': 'https://www.mint.com/'}]}, 'Recommendations': {'1. Review Recurring Deposits': [{'Action': 'Adjust recurring deposits to free up cash flow', 'Description': 'Review and adjust monthly recurring deposits to ensure they align with changing financial priorities.', 'Source': 'https://www.investopedia.com/articles/personal-finance/031814/how-to-make-recurring-deposits-work-for-you.asp'}]}, 'Potential Steps to Improve Financial Situation': {'1. Debt Consolidation': [{'Benefits': 'Reduced monthly payments, lower interest rates, and a single loan balance', 'Description': 'Consider consolidating existing debt into a single loan with a lower interest rate.', 'Source': 'https://www.investopedia.com/articles/best-practices-for-consolidating-debt-4586376'}]}}-->
+            renderAdvice(adviceData);
+        } catch (error) {
+            console.error('Advice generation error:', error);
+            alert('Sorry for the inconvenience. Please try again later.');
+        } finally {
+            // Remove the loading message
+            loadingMessage.remove();
+        }
+    }
+    document.getElementById('adviceBtn').addEventListener('click', getAdvice);
+
+    function renderAdvice(adviceData) {
+        const container = document.getElementById('advice-container');
+        container.innerHTML = ''; // Clear existing content
+
+        if (!adviceData || typeof adviceData !== 'object') {
+            const errorMessage = document.createElement('p');
+            errorMessage.textContent = 'No advice available at this time.';
+            container.appendChild(errorMessage);
+            return;
+        }
+
+        console.log(adviceData);
+
+        const imageUrls = [
+            'https://img.lovepik.com/free-png/20220513/lovepik-wealth-management-png-image_wh1200.png',
+            'https://png.pngtree.com/png-clipart/20230824/original/pngtree-businessman-sitting-on-a-big-money-and-coins-finance-success-money-wealth-vector-illustration-concept-picture-image_8316652.png',
+            'https://icon2.cleanpng.com/lnd/20240513/hbp/awxtuz9ep.webp',
+            'https://static.vecteezy.com/system/resources/thumbnails/023/850/969/small/businessman-with-money-png.png',
+            'https://icon2.cleanpng.com/20231110/jyw/transparent-wealth-money-success-financial-independence-happin-man-with-gold-coins-smiling-and-holding-1711022147955.webp',
+            'https://static.vecteezy.com/system/resources/thumbnails/020/716/211/small_2x/businessman-under-rain-of-banknotes-businessman-with-paper-money-businessman-and-money-icon-rich-business-man-businessman-with-lots-of-money-money-making-businessman-free-png.png',
+            'https://png.pngtree.com/png-clipart/20190611/original/pngtree-golden-wealth-png-image_2888939.jpg',
+            'https://w7.pngwing.com/pngs/54/366/png-transparent-wealth-3d-villain-coin-coins-creative-people-business-banking-thumbnail.png',
+            'https://png.pngtree.com/png-clipart/20200701/original/pngtree-gold-coin-money-bag-currency-arrow-up-png-element-png-image_5354497.jpg'
+        ];
+
+        // Iterate through each category in adviceData
+        const categories = Object.entries(adviceData);
+        for  (let i = 0; i < categories.length; i++) {
+            const [category, items] = categories[i];
+            const cardCol = document.createElement('div');
+            cardCol.className = 'col';
+
+            const card = document.createElement('div');
+            card.className = 'card h-100';
+
+            const cardImg = document.createElement('img');
+            cardImg.src = imageUrls[i % imageUrls.length];
+            cardImg.className = 'card-img-top';
+            cardImg.alt = category; // Use category as alt text
+
+            // Style the image
+            cardImg.style.width = '100px'; // Set a specific width
+            cardImg.style.height = 'auto'; // Maintain aspect ratio
+            cardImg.style.display = 'block'; // Ensure it behaves as a block element
+            cardImg.style.margin = '0 auto'; // Center the image horizontally
+
+
+            const cardBody = document.createElement('div');
+            cardBody.className = 'card-body';
+
+            const cardTitle = document.createElement('h5');
+            cardTitle.className = 'card-title';
+            cardTitle.textContent = category; // Use category as the title
+
+            const cardText = document.createElement('p');
+            cardText.className = 'card-text';
+
+            // Iterate through the items within the category
+            for (const [key, points] of Object.entries(items)) {
+                const keyHeader = document.createElement('strong');
+                keyHeader.textContent = key + ': ';
+                cardText.appendChild(keyHeader);
+
+                if (Array.isArray(points)) {
+                    points.forEach(point => {
+                        const pointDetails = document.createElement('span');
+                        pointDetails.innerHTML = `<br>Strategy: ${point.Strategy || point.Tool || point.Action || ''}<br>Description: ${point.Description || ''}<br>`;
+                        if (point.Source) {
+                            pointDetails.innerHTML += `Source: <a href="${point.Source}" target="_blank">${point.Source}</a><br>`;
+                        }
+                        cardText.appendChild(pointDetails);
+                    });
+                } else {
+                    const pointDetails = document.createElement('span');
+                    pointDetails.innerHTML = `<br>Recommendation: ${points.Recommendation || ''}<br>`;
+                    if (points['Type of Account']) {
+                        pointDetails.innerHTML += `Type of Account: ${points['Type of Account']}<br>`;
+                    }
+                    if (points.Source) {
+                        pointDetails.innerHTML += `Source: <a href="${points.Source}" target="_blank">${points.Source}</a><br>`;
+                    }
+                    cardText.appendChild(pointDetails);
+                }
+        }
+
+        cardBody.appendChild(cardTitle);
+        cardBody.appendChild(cardText);
+        card.appendChild(cardImg);
+        card.appendChild(cardBody);
+        cardCol.appendChild(card);
+        container.appendChild(cardCol);
+    }
+    }
+
 </script>
 
 </body>
