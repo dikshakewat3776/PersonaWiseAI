@@ -210,9 +210,10 @@ def advice_user():
         del bot_data[first_key]  # Delete the first key-value pair
     print('Generating advice with bot data: ' + str(bot_data))
     data = FinancialAdvisor().parse_with_llama(content=bot_data)
+    store_conversation(user_id, '', data)
     print('Generated advice data type: ' + str(type(data)))
     print('Generated advice data: ' + str(data))
-    return json.loads(data)
+    return jsonify(data)
 
 if __name__ == '__main__':
     app.run(debug=True)
