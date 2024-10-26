@@ -1,6 +1,6 @@
 from langchain_ollama import OllamaLLM  # Importing the LLM interface
 from langchain_core.prompts import ChatPromptTemplate  # For templating the prompts
-from prompt_templates import FINANCIAL_ADVISOR_PROMPT, FINANCIAL_PERSONA_COLLECTOR
+from genai_model.prompt_templates import FINANCIAL_ADVISOR_PROMPT, FINANCIAL_PERSONA_COLLECTOR
 import json
 import ast
 
