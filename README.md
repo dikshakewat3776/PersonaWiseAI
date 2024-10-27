@@ -6,7 +6,7 @@
 
 In India, traditional credit scoring methods often fail to account for many individuals’ financial realities, leading to exclusion from essential financial services. Additionally, the vast amount of financial advice available online can overwhelm users, making it challenging to find personalized guidance. PersonaWiseAI addresses these challenges by offering a tailored approach to credit assessment and investment recommendations.
 
-[Click Here!](https://docs.google.com/presentation/d/1NLp2uMD-7yhoFqBthoqVyyjARHVFyBFrxsEOooZycoU/edit?usp=sharing)
+[PPT](https://docs.google.com/presentation/d/1NLp2uMD-7yhoFqBthoqVyyjARHVFyBFrxsEOooZycoU/edit?usp=sharing)
 
 
 ## Mind Map
@@ -62,8 +62,33 @@ In India, traditional credit scoring methods often fail to account for many indi
 
 ![image](https://github.com/user-attachments/assets/51e7c7eb-c8df-4d28-b514-c89c380d6586)
 
-## Introducting PersonaWise AI !!!
+### Introducting PersonaWise AI !!!
 
 https://github.com/user-attachments/assets/d08986d8-6635-4891-802c-d56f02af517c
 
+### Prerequisites
 
+- Python 3.10 or higher
+- ollama 
+
+### Setup
+
+- Clone the repository
+
+```git clone https://github.com/dikshakewat3776/PersonaWiseAI.git```
+
+- Create a virtual environment
+
+```python -m venv venv```
+
+- Activate the virtual environment
+
+```source venv/bin/activate```
+
+- Install dependencies
+
+```pip install -r requirements.txt```
+
+- Run the flask app
+
+```python app.py```
